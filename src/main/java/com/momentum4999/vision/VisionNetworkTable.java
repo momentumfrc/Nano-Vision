@@ -7,6 +7,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 public class VisionNetworkTable {
     private final DoublePublisher cameraX;
     private final DoublePublisher cameraY;
+    private final DoublePublisher cameraZ;
     private final DoublePublisher cameraYaw;
 
     public VisionNetworkTable(String robotHostname) {
@@ -14,15 +15,17 @@ public class VisionNetworkTable {
         NetworkTable vision = inst.getTable("nano_vision");
         this.cameraX = vision.getDoubleTopic("camera_x").publish();
         this.cameraY = vision.getDoubleTopic("camera_y").publish();
+        this.cameraZ = vision.getDoubleTopic("camera_z").publish();
         this.cameraYaw = vision.getDoubleTopic("camera_yaw").publish();
 
         inst.startClient4("Nano Vision");
         inst.setServer(robotHostname);
     }
 
-    public void updatePose(double x, double y, double yaw) {
+    public void updatePose(double x, double y, double z, double yaw) {
         this.cameraX.accept(x);
         this.cameraY.accept(y);
+        this.cameraZ.accept(z);
         this.cameraYaw.accept(yaw);
     }
 }

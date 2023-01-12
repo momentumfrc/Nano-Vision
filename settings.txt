@@ -1,0 +1,4 @@
+# Set gui and annotate to false when using in production
+
+gui=true
+aprtag.annotate=true

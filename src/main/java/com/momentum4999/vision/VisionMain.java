@@ -14,7 +14,7 @@ public class VisionMain {
     private static final String WINDOW_ID = "nano-vision";
 
     public static void main(String[] args) throws IOException {
-        String settingsPath = null;
+        String settingsPath = "settings.txt";
         String hostname = "localhost";
         if (args.length >= 1) {
             settingsPath = args[0];
@@ -24,10 +24,8 @@ public class VisionMain {
         }
 
         Properties settings = new Properties();
-        if (settingsPath != null) {
-            try (InputStream settingsFile = new FileInputStream(settingsPath)) {
-                settings.load(settingsFile);
-            }
+        try (InputStream settingsFile = new FileInputStream(settingsPath)) {
+            settings.load(settingsFile);
         }
         boolean gui = Boolean.parseBoolean(settings.getProperty("gui", "false"));
 
@@ -44,9 +42,11 @@ public class VisionMain {
 
             aprilTag.update(imageBuffer);
 
-            HighGui.imshow(WINDOW_ID, imageBuffer);
-            if (HighGui.waitKey(10) == java.awt.event.KeyEvent.VK_Q) {
-                break;
+            if (gui) {
+                HighGui.imshow(WINDOW_ID, imageBuffer);
+                if (HighGui.waitKey(10) == java.awt.event.KeyEvent.VK_Q) {
+                    break;
+                }
             }
         }
 

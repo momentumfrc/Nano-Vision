@@ -4,8 +4,10 @@ import edu.wpi.first.apriltag.AprilTagDetection;
 import edu.wpi.first.apriltag.AprilTagDetector;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagPoseEstimator;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
+
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
@@ -13,6 +15,7 @@ import org.opencv.imgproc.Imgproc;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.Properties;
 
 public class AprilTagVision implements Closeable {
@@ -37,14 +40,35 @@ public class AprilTagVision implements Closeable {
         if (!colorBuffer.empty()) {
             Imgproc.cvtColor(colorBuffer, grayscaleBuffer, Imgproc.COLOR_RGB2GRAY);
 
-            Translation2d pos = null;
-            double yaw = Double.NaN;
+            int entries = 0;
+            Translation3d pos = new Translation3d();
+            double yaw = 0;
             for (AprilTagDetection tag : this.detector.detect(grayscaleBuffer)) {
-                Transform3d transform = this.poseEstimator.estimate(tag);
+                Transform3d detectedPose = this.poseEstimator.estimate(tag);
+                Optional<Pose3d> possiblePose = FIELD.getTagPose(tag.getId());
+                if (possiblePose.isPresent()) {
+                    Pose3d pose = possiblePose.get();
+                    Translation3d camPos = pose.getTranslation().minus(detectedPose.getTranslation());
+                    double camYaw = pose.getRotation().getZ() - detectedPose.getRotation().getZ();
+                    
+                    pos = pos.plus(camPos);
+                    yaw += camYaw;
+                    entries++;
+                }
 
                 if (this.annotate) {
-                    annotateVideo(tag, colorBuffer);
+                    annotateTag(tag, colorBuffer);
                 }
+            }
+
+            if (entries > 0) {
+                pos = pos.div(entries);
+                yaw = yaw / entries;
+
+                if (this.annotate) {
+                    annotatePos(pos.getX(), pos.getY(), pos.getZ(), yaw, colorBuffer);
+                }
+                this.table.updatePose(pos.getX(), pos.getY(), pos.getZ(), yaw);
             }
         }
     }
@@ -67,7 +91,7 @@ public class AprilTagVision implements Closeable {
         );
     }
 
-    private static void annotateVideo(AprilTagDetection tag, Mat imageBuf) {
+    private static void annotateTag(AprilTagDetection tag, Mat imageBuf) {
         for (int i = 0; i < 4; ++i) {
             Imgproc.line(imageBuf,
                     new Point(tag.getCornerX((i + 3) % 4), tag.getCornerY((i + 3) % 4)),
@@ -78,6 +102,13 @@ public class AprilTagVision implements Closeable {
         Imgproc.putText(imageBuf, Integer.toString(tag.getId()),
                 new Point(tag.getCenterX(), tag.getCenterY()), Imgproc.FONT_HERSHEY_PLAIN,
                 2, new Scalar(255, 0, 255), 2);
+    }
+
+    private static void annotatePos(double x, double y, double z, double yaw, Mat imageBuf) {
+        String text = String.format("X=%3.2f Y=%3.2f Z=%3.2f R=%3.2f", x, y, z, yaw);
+        Imgproc.putText(imageBuf, text,
+                new Point(0, imageBuf.rows()), Imgproc.FONT_HERSHEY_PLAIN,
+                2, new Scalar(255, 255, 0), 2);
     }
 
     static {
