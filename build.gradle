@@ -1,0 +1,44 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group 'com.momentum4999'
+version '1.0'
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'https://frcmaven.wpi.edu/artifactory/release/'
+    }
+}
+
+sourceSets.main.resources {
+    srcDirs = ['src/main/resources']
+}
+
+dependencies {
+    implementation 'org.openpnp:opencv:4.6.0-0'
+
+    implementation 'edu.wpi.first.apriltag:apriltag-java:2023.1.1'
+    implementation 'edu.wpi.first.apriltag:apriltag-jni:2023.1.1:windowsx86-64'
+
+    implementation 'edu.wpi.first.wpiutil:wpiutil-java:2023.1.1'
+    implementation 'edu.wpi.first.wpiutil:wpiutil-jni:2023.1.1:windowsx86-64'
+
+    implementation 'edu.wpi.first.wpimath:wpimath-java:2023.1.1'
+    implementation 'edu.wpi.first.wpimath:wpimath-jni:2023.1.1:windowsx86-64'
+
+    implementation 'edu.wpi.first.ntcore:ntcore-java:2023.1.1'
+    implementation 'edu.wpi.first.ntcore:ntcore-jni:2023.1.1:windowsx86-64'
+
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.9.6'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.9.6'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.6'
+
+    implementation 'org.ejml:ejml-all:0.34'
+}
+
+application {
+    mainClass = 'com.momentum4999.vision.VisionMain'
+}
