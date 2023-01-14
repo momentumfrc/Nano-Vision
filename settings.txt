@@ -1,4 +1,18 @@
 # Set gui and annotate to false when using in production
-
 gui=true
-aprtag.annotate=true
+gui.field=true
+
+# Set to the address of your robot (network table server)
+nt.server=localhost:8000
+
+# April Tag settings
+aprtag.annotate_video=true
+aprtag.family=tag16h5
+aprtag.threads=3
+aprtag.decimate=1
+aprtag.blur=0.25
+aprtag.size_meters=0.1524
+aprtag.fx=850 # Camera focus values should be changed
+aprtag.fy=850
+aprtag.cx=300
+aprtag.cy=215
