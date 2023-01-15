@@ -2,6 +2,12 @@
 gui=true
 gui.field=true
 
+video.width=640
+video.height=480
+video.fps=30
+video.server_port=4999
+video.output_scale=0.5
+
 # Set to the address of your robot (network table server)
 nt.server=localhost:8000
 
