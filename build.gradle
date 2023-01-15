@@ -51,3 +51,12 @@ dependencies {
 application {
     mainClass = 'com.momentum4999.vision.VisionMain'
 }
+
+jar {
+    manifest {
+        attributes 'Main-Class': application.mainClass.get()
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
