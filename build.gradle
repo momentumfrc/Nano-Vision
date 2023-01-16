@@ -18,6 +18,7 @@ sourceSets.main.resources {
 }
 
 dependencies {
+    String wpilib_version = '2023.2.1'
     String jni_platform = 'linuxarm64'
     if (System.properties['os.name'].toLowerCase(Locale.ROOT).contains('win')) {
         jni_platform = 'windowsx86-64'
@@ -25,21 +26,21 @@ dependencies {
 
     implementation 'org.openpnp:opencv:4.6.0-0'
 
-    implementation 'edu.wpi.first.apriltag:apriltag-java:2023.1.1'
-    implementation "edu.wpi.first.apriltag:apriltag-jni:2023.1.1:${jni_platform}"
+    implementation "edu.wpi.first.apriltag:apriltag-java:${wpilib_version}"
+    implementation "edu.wpi.first.apriltag:apriltag-jni:${wpilib_version}:${jni_platform}"
 
-    implementation 'edu.wpi.first.wpiutil:wpiutil-java:2023.1.1'
-    implementation "edu.wpi.first.wpiutil:wpiutil-jni:2023.1.1:${jni_platform}"
+    implementation "edu.wpi.first.wpiutil:wpiutil-java:${wpilib_version}"
+    implementation "edu.wpi.first.wpiutil:wpiutil-jni:${wpilib_version}:${jni_platform}"
 
-    implementation 'edu.wpi.first.wpimath:wpimath-java:2023.1.1'
-    implementation "edu.wpi.first.wpimath:wpimath-jni:2023.1.1:${jni_platform}"
+    implementation "edu.wpi.first.wpimath:wpimath-java:${wpilib_version}"
+    implementation "edu.wpi.first.wpimath:wpimath-jni:${wpilib_version}:${jni_platform}"
 
-    implementation 'edu.wpi.first.ntcore:ntcore-java:2023.1.1'
-    implementation "edu.wpi.first.ntcore:ntcore-jni:2023.1.1:${jni_platform}"
+    implementation "edu.wpi.first.ntcore:ntcore-java:${wpilib_version}"
+    implementation "edu.wpi.first.ntcore:ntcore-jni:${wpilib_version}:${jni_platform}"
 
-    implementation 'edu.wpi.first.cameraserver:cameraserver-java:2023.1.1'
-    implementation 'edu.wpi.first.cscore:cscore-java:2023.1.1'
-    implementation "edu.wpi.first.cscore:cscore-jni:2023.1.1:${jni_platform}"
+    implementation "edu.wpi.first.cameraserver:cameraserver-java:${wpilib_version}"
+    implementation "edu.wpi.first.cscore:cscore-java:${wpilib_version}"
+    implementation "edu.wpi.first.cscore:cscore-jni:${wpilib_version}:${jni_platform}"
 
     implementation 'com.fasterxml.jackson.core:jackson-core:2.9.6'
     implementation 'com.fasterxml.jackson.core:jackson-annotations:2.9.6'
